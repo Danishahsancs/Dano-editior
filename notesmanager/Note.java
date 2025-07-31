@@ -1,4 +1,4 @@
-package java;
+package notesmanager;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,7 +20,7 @@ public class Note {
         this.modified = LocalDateTime.now();
     }
 
-    // Getters
+    // --- Getters ---
     public String getId() {
         return id;
     }
@@ -45,13 +45,17 @@ public class Note {
         return content;
     }
 
-    // Setters
-    public void setId(String id) {
-        this.id = id;
-    }
-
+    // --- Setters ---
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
     }
 
     public void setCreated() {
@@ -62,14 +66,7 @@ public class Note {
         this.modified = LocalDateTime.now();
     }
 
-    public void setTags(List<String> tags) {
-        this.tags = tags;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
+    // --- Update helpers ---
     public void updateContent(String newContent) {
         this.content = newContent;
         this.modified = LocalDateTime.now();
@@ -85,6 +82,7 @@ public class Note {
         this.modified = LocalDateTime.now();
     }
 
+    // --- Display note in console ---
     public void display() {
         System.out.println("Title: " + title);
         System.out.println("Created: " + created);
@@ -93,6 +91,7 @@ public class Note {
         System.out.println("\n" + content);
     }
 
+    // --- Convert note to YAML + content for saving ---
     public String toFileFormat() {
         String yamlHeader = "---\n"
                 + "title: " + title + "\n"
@@ -103,6 +102,7 @@ public class Note {
         return yamlHeader + content;
     }
 
+    // --- Search helpers ---
     public boolean matchesQuery(String query) {
         final String lowerQuery = query.toLowerCase();
         return title.toLowerCase().contains(lowerQuery)
@@ -113,5 +113,4 @@ public class Note {
     public boolean hasTag(String tag) {
         return tags.contains(tag);
     }
-
 }
