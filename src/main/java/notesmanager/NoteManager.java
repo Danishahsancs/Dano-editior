@@ -7,7 +7,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+
 import notesmanager.TextEditorHelper;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -25,6 +29,7 @@ public class NoteManager {
     private List<Note> notes;
 
     public NoteManager() {
+        notes = new ArrayList<>();
         loadNotes();
     }
 
@@ -36,8 +41,9 @@ public class NoteManager {
 
         try {
             TextEditorHelper.openEditor(TEMP_FILE);
+
             String content = Files.readString(Paths.get(TEMP_FILE));
-            Note newNote = new Note(title, content, tags);
+            Note newNote = new Note(title, content, tags, null, null, null);
             notes.add(newNote);
             saveNotes();
 
@@ -108,6 +114,20 @@ public class NoteManager {
         System.out.println("Total Notes: " + notes.size());
     }
 
+    public void listNotes() {
+        for (Note note : notes) {
+            System.out.println("~" + note.getTitle());
+        }
+    }
+
+    public void listNotesByTag(String tag) {
+        for (Note note : notes) {
+            if (note.hasTag(tag)) {
+                note.printTags();
+            }
+        }
+    }
+
     // helper funtctions
     public Note findNoteByTitle(String title) {
         if (notes == null)
@@ -138,7 +158,6 @@ public class NoteManager {
     }
 
     private void saveNotes() {
-
         File dir = new File(NOTE_FILE);
         if (!dir.exists()) {
             dir.mkdirs();
@@ -161,7 +180,9 @@ public class NoteManager {
     }
 
     private Note mapToNote(Map<String, Object> map) {
-        Note note = new Note((String) map.get("title"), (String) map.get("content"), (List<String>) map.get("tags"));
+        Note note = new Note(map.get("title").toString(), map.get("content").toString(), (List<String>) map.get("tags"),
+                LocalDateTime.parse(map.get("created").toString()), LocalDateTime.parse(map.get("modified").toString()),
+                map.get("id").toString());
         return note;
     }
 

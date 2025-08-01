@@ -9,11 +9,11 @@ public class CommandLineApp {
     private static final Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-        System.out.println("Welcome to Notes Manager!");
+        System.out.println("Welcome to Dano notes editor!");
         System.out.println("Type 'help' for available commands or 'exit' to quit.\n");
 
         while (true) {
-            System.out.print("notes> ");
+            System.out.print("Dano editor> ");
             String input = scanner.nextLine().trim();
 
             if (input.isEmpty())
@@ -71,9 +71,9 @@ public class CommandLineApp {
         System.out.println("create                       Create a new note (opens in editor)");
         System.out.println("list                         List all notes");
         System.out.println("list --tag <tag>             List notes with specific tag");
-        System.out.println("read <note-id>               Display a specific note");
-        System.out.println("edit <note-id>               Edit a specific note");
-        System.out.println("delete <note-id>             Delete a specific note");
+        System.out.println("read <note-title>               Display a specific note");
+        System.out.println("edit <note-title>               Edit a specific note");
+        System.out.println("delete <note-title>             Delete a specific note");
         System.out.println("search <query>               Search notes for text");
         System.out.println("stats                        Display statistics about notes");
         System.out.println("clear                        Clear the screen");
@@ -86,6 +86,10 @@ public class CommandLineApp {
 
         if (title.isEmpty()) {
             System.out.println("Title cannot be empty.");
+            return;
+        }
+        if (noteManager.findNoteByTitle(title) != null) {
+            System.out.println("Already a file by the name of '" + title + "'");
             return;
         }
 
@@ -105,11 +109,9 @@ public class CommandLineApp {
     private static void handleListCommand(String[] parts) {
         if (parts.length >= 3 && "--tag".equals(parts[1])) {
             String tag = parts[2];
-            // TODO: Implement listNotesByTag method in NoteManager
-            System.out.println("Tag filtering not yet implemented. Showing all notes:");
-            // noteManager.listNotes();
+            noteManager.listNotesByTag(tag);
         } else {
-            // noteManager.listNotes();
+            noteManager.listNotes();
         }
     }
 
@@ -119,9 +121,7 @@ public class CommandLineApp {
             return;
         }
 
-        String noteId = parts[1];
-        // TODO: Update NoteManager to use IDs instead of titles
-        System.out.println("ID-based reading not yet implemented. Using title for now:");
+        String noteId = String.join(" ", Arrays.copyOfRange(parts, 1, parts.length));
         noteManager.readNote(noteId);
     }
 
@@ -131,9 +131,7 @@ public class CommandLineApp {
             return;
         }
 
-        String noteId = parts[1];
-        // TODO: Update NoteManager to use IDs instead of titles
-        System.out.println("ID-based editing not yet implemented. Using title for now:");
+        String noteId = String.join(" ", Arrays.copyOfRange(parts, 1, parts.length));
         noteManager.editNote(noteId);
     }
 
@@ -143,14 +141,12 @@ public class CommandLineApp {
             return;
         }
 
-        String noteId = parts[1];
+        String noteId = String.join(" ", Arrays.copyOfRange(parts, 1, parts.length));
 
-        System.out.print("Are you sure you want to delete this note? (y/N): ");
+        System.out.print("Are you sure you want to delete this note? (y/n): ");
         String confirmation = scanner.nextLine().trim().toLowerCase();
 
-        if ("y".equals(confirmation) || "yes".equals(confirmation)) {
-            // TODO: Update NoteManager to use IDs instead of titles
-            System.out.println("ID-based deletion not yet implemented. Using title for now:");
+        if ("y".equals(confirmation.toLowerCase()) || "yes".equals(confirmation.toLowerCase())) {
             noteManager.deleteNote(noteId);
         } else {
             System.out.println("Deletion cancelled.");
@@ -169,7 +165,6 @@ public class CommandLineApp {
     }
 
     private static void clearScreen() {
-        // Clear screen for most terminals
         System.out.print("\033[2J\033[H");
         System.out.flush();
     }

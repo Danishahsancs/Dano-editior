@@ -11,13 +11,20 @@ public class Note {
     private List<String> tags;
     private String content;
 
-    public Note(String title, String content, List<String> tags) {
-        this.id = java.util.UUID.randomUUID().toString(); // Unique note ID
+    public Note(String title, String content, List<String> tags, LocalDateTime created, LocalDateTime modified,
+            String id) {
         this.title = title;
         this.content = content;
         this.tags = tags;
-        this.created = LocalDateTime.now();
-        this.modified = LocalDateTime.now();
+        if (created == null && modified == null && id == null) {
+            this.id = java.util.UUID.randomUUID().toString(); // Unique note ID
+            this.created = LocalDateTime.now();
+            this.modified = LocalDateTime.now();
+        }else{
+            this.id = id;
+            this.created = created;
+            this.modified = modified;
+        }
     }
 
     // --- Getters ---
@@ -112,5 +119,9 @@ public class Note {
 
     public boolean hasTag(String tag) {
         return tags.contains(tag);
+    }
+
+    public void printTags() {
+        System.out.print(getTitle() + getTags());
     }
 }
