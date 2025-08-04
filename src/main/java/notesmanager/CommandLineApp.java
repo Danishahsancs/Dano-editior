@@ -65,7 +65,7 @@ public class CommandLineApp {
     }
 
     private static void displayHelp() {
-        System.out.println("Notes Manager - Available Commands:");
+        System.out.println("Dano Notes Editor - Available Commands:");
         System.out.println("===================================");
         System.out.println("help, --help                 Display this help information");
         System.out.println("create                       Create a new note (opens in editor)");
